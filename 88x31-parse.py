@@ -52,12 +52,6 @@ with open("TMPpages.json", "x") as f:
     f.write(json.dumps(pages))
 
 # Table containing records of pages and what which buttons they contain (one page->button per record)
-# page: the page which has this link
-# link: where the page links to
-# sha256: the SHA256-hash of the button
-# alt: the alt-text of the button
-# title: the title of the button
-# filename: the original filename of the button
 db.sql(
     "CREATE TABLE pages AS SELECT * FROM read_json('TMPpages.json', columns={page: 'VARCHAR', link: 'VARCHAR', sha256: 'VARCHAR', alt: 'VARCHAR', title: 'VARCHAR', filename: 'VARCHAR'})"
 )

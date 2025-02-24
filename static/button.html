@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Button Info</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function enc(inp) {
+            return inp.replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("&", "&amp;")
+        }
+
+        async function init() {
+            let hash = window.location.hash.substring(1);
+            let bi = document.getElementById("button-img");
+            bi.src = "/api/button/" + hash + "/img";
+            let res = await fetch("/api/button/" + hash);
+            let resJson = JSON.parse(await res.text());
+            if (res.status !== 200) {
+                let error = resJson["error"];
+                document.body.innerHTML = "<h2>Failed to load image: " + error + "</h2>";
+                return;
+            }
+            let pages = resJson["info"]["pages"];
+            if (pages.length === 0) {
+                document.body.innerHTML = "<h2>Failed to load image: Unknown hash</h2>";
+                return;
+            }
+            let linksElem = document.getElementById("links");
+            linksElem.innerHTML = "";
+            for (let page of pages) {
+                let backlink = page["backlink"]
+                let link = page["link"]
+                let alt = page["alt"];
+                let title = page["title"]
+                let filename = page["filename"]
+
+                let li = document.createElement("li")
+                li.innerHTML = '<a href="//' + backlink + '">' + backlink + "</a>";
+                li.innerHTML += ' <small>(<a href="/page#' + backlink + '">i</a>)</small>'
+                if (link != null) {
+                    li.innerHTML += " -&gt; "
+                    li.innerHTML += '<a href="//' + link + '">' + link + "</a>";
+                    li.innerHTML += ' <small>(<a href="/page#' + link + '">i</a>)</small>';
+                }
+                if (alt != null || title != null || filename != null) {
+                    li.innerHTML += " ("
+                        + [
+                            alt != null ? "alt: <span class='light-bg'>" + enc(alt) + "</span>" : null,
+                            title != null ? "title: <span class='light-bg'>" + enc(title) + "</span>" : null,
+                            filename != null ? "filename: <span class='light-bg'>" + enc(filename) + "</span>" : null
+                          ].filter(x => x != null).join(", ")
+                        + ")"
+                }
+                linksElem.appendChild(li);
+            }
+        }
+
+        window.onload = init;
+        window.onhashchange = init;
+    </script>
+</head>
+<body>
+<img src="" alt="Image of the button" id="button-img" class="button">
+<ul id="links"></ul>
+</body>
+</html>

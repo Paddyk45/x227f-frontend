@@ -1,0 +1,107 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>88x31 browser</title>
+    <link href="style.css" rel="stylesheet">
+    <script>
+        async function init() {
+            let res = await fetch("/api/stats");
+            let resJson = JSON.parse(await res.text());
+            let amountButtonsWithLink = resJson["buttons_link"];
+            let amountButtonsNoLink = resJson["buttons_no_link"];
+            let amountUniqueButtons = resJson["unique_buttons"];
+            let stats = document.getElementById("stats");
+            let p = document.createElement("p");
+            p.innerText = "buttons without link: " + amountButtonsNoLink;
+            stats.appendChild(p);
+            p = document.createElement("p")
+            p.innerText = "buttons with link: " + amountButtonsWithLink;
+            stats.appendChild(p);
+            p = document.createElement("p")
+            p.innerText = "buttons total: " + (amountButtonsNoLink + amountButtonsWithLink);
+            stats.appendChild(p);
+            p = document.createElement("p")
+            p.innerText = "unique buttons: " + amountUniqueButtons;
+            stats.appendChild(p);
+        }
+
+        function goto() {
+            let query = document.getElementById("goto-query").value.trim();
+            if (query === "") return;
+            switch (document.getElementById("goto-what").value) {
+                case "button": {
+                    window.location.href = "/button#" + query;
+                    break;
+                }
+                case "page": {
+                    window.location.href = "/page#" + query;
+                    break;
+                }
+            }
+        }
+
+        function search() {
+            let query = document.getElementById("search-query").value.trim();
+            if (query === "") return;
+            let searchFilenames = document.getElementById("search-filenames").checked;
+            let searchNames = document.getElementById("search-names").checked;
+            let searchLinksTo = document.getElementById("search-links-to").checked;
+            let searchBacklinks = document.getElementById("search-backlinks").checked;
+            let searches = 0;
+            searches |= searchFilenames << 3 | searchNames << 2 | searchLinksTo << 1 | searchBacklinks << 0;
+            window.location.href = "/search#" + searches + "," + query;
+        }
+
+        init();
+    </script>
+</head>
+<body>
+<div class="center">
+    <h1>88x31 search</h1>
+    <p>also check out <a href="//eightyeightthirty.one">eightyeightthirty.one</a> and <a href="//matdoes.dev/buttons">matdoes.dev/buttons</a>!</p>
+        <p>huge thanks to <a href="//matdoes.dev">mat</a> for <a href="//github.com/mat-1/x227f">x227f</a>, the scraper which this site uses</p>
+    <h2>feeling lucky? <a href="/random">show random buttons!</a></h2>
+    <h2>search buttons</h2>
+    <label>
+        <input id="search-query" placeholder="query...">
+    </label>
+    <button id="search-button" onclick="search()">search!</button>
+    <p><small>use % for a 0-inf character wildcard and _ for a single character wildcard</small></p>
+    <p class="no-left-padding">
+        search in
+        <label>
+            <input id="search-names" type="checkbox" checked>
+            alts and titles that it has
+        </label>
+        <label>
+            <input id="search-filenames" type="checkbox" checked>
+            filenames that it has
+        </label>
+        <label>
+            <input id="search-links-to" type="checkbox">
+            sites that it links to
+        </label>
+        <label>
+            <input id="search-backlinks" type="checkbox">
+            sites that use it
+        </label>
+    </p>
+
+    <h2>go to</h2>
+    <label>
+        <select id="goto-what">
+            <option value="page">page</option>
+            <option value="button">button (by hash)</option>
+        </select>
+    </label>
+    <label>
+        <input id="goto-query" placeholder="go to where?">
+    </label>
+    <button onclick="goto()">goto!</button>
+    <div class="no-left-padding" id="stats">
+        <h2>stats</h2>
+    </div>
+</div>
+</body>
+</html>

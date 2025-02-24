@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Info</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function enc(inp) {
+            return inp.replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("&", "&amp;")
+        }
+
+        async function init() {
+            let page = window.location.hash.substring(1);
+            document.getElementById("title").innerHTML = "Page: <a href=\"//" + page + "\">" + page + "</a>";
+            let res = await fetch("/api/page/" + encodeURIComponent(page));
+            let resJson = JSON.parse(await res.text());
+            let backlinks = document.getElementById("backlinks");
+            backlinks.innerHTML = "";
+            for (let backlink of resJson["info"]["backlinks"]) {
+                let page = backlink["page"];
+                let buttonHash = backlink["button"];
+                let alt = backlink["alt"];
+                let title = backlink["title"];
+                let filename = backlink["filename"];
+                let li = document.createElement("li");
+                li.innerHTML = "<a href=\"/button#" + buttonHash + "\"><img src=\"/api/button/" + buttonHash + "/img\" alt=\"Button\" class=\"button\"></a>"
+                li.innerHTML += " <a href=\"//" + page + "\">" + page + "</a>";
+                li.innerHTML += " <small>(<a href=\"/page#" + page + "\">i</a>)</small>";
+                if (alt != null || title != null || filename != null) {
+                    li.innerHTML += " ("
+                        + [
+                            alt != null ? "alt: <span class='light-bg'>" + enc(alt) + "</span>" : null,
+                            title != null ? "title: <span class='light-bg'>" + enc(title) + "</span>" : null,
+                            filename != null ? "filename: <span class='light-bg'>" + enc(filename) + "</span>" : null
+                        ].filter(x => x != null).join(", ")
+                        + ")"
+                }
+                backlinks.appendChild(li);
+            }
+            let buttons = document.getElementById("buttons");
+            buttons.innerHTML = "";
+            for (let button of resJson["info"]["buttons"]) {
+                let page = button["page"];
+                let buttonHash = button["button"];
+                let alt = button["alt"];
+                let title = button["title"];
+                let filename = button["filename"];
+                let li = document.createElement("li");
+                li.innerHTML = '<a href="/button#' + buttonHash + '"><img src="/api/button/' + buttonHash + '/img" alt="Button" class="button"></a>'
+                if (page !== null) {
+                    li.innerHTML += " <a href=\"//" + page + "\">" + page + "</a>";
+                    li.innerHTML += " <small>(<a href=\"/page#" + page + "\">i</a>)</small>";
+                }
+                if (alt != null || title != null || filename != null) {
+                    li.innerHTML += " ("
+                        + [
+                            alt != null ? "alt: <span class='light-bg'>" + enc(alt) + "</span>" : null,
+                            title != null ? "title: <span class='light-bg'>" + enc(title) + "</span>" : null,
+                            filename != null ? "filename: <span class='light-bg'>" + enc(filename) + "</span>" : null
+                        ].filter(x => x != null).join(", ")
+                        + ")"
+                }
+                buttons.appendChild(li);
+            }
+        }
+
+        window.onload = init;
+        window.onhashchange = init;
+    </script>
+</head>
+<body>
+<h2 id="title"></h2>
+<h3>Linked from:</h3>
+<ul id="backlinks"></ul>
+<h3>Buttons:</h3>
+<ul id="buttons"></ul>
+</body>
+</html>

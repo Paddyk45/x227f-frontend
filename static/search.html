@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Buttons</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        async function init() {
+            let searches_query = window.location.hash.substring(1).split(",", 2);
+            let searches = searches_query[0];
+            let query = searches_query[1];
+            let res = await fetch("/api/search?query=" + encodeURIComponent(query) + "&search_in=" + searches);
+            let resJson = JSON.parse(await res.text());
+            if (res.status !== 200) document.body.innerText = "Search failed: " + resJson["error"];
+            let results = resJson["results"];
+            let buttons = document.getElementById("buttons");
+            for (let hash of results) {
+                let a = document.createElement("a");
+                a.href = "/button#" + hash;
+                let img = document.createElement("img");
+                img.src = "/api/button/" + hash + "/img";
+                img.alt = "Button with hash " + hash;
+                img.className = "button";
+                a.innerHTML = img.outerHTML;
+                buttons.appendChild(a);
+            }
+        }
+
+        window.addEventListener("load", init)
+    </script>
+</head>
+<body>
+<h1>Search results</h1>
+<div class="buttons" id="buttons"></div>
+</body>
+</html>

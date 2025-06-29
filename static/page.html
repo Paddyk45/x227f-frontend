@@ -26,7 +26,7 @@
                 let filename = backlink["filename"];
                 let li = document.createElement("li");
                 li.innerHTML = `<a href="/button#${buttonHash}"><img src="/api/button/${buttonHash}/img" alt="Button" class="button"></a>`
-                             + ` <a target="_blank" href="${page}">${page}</a>`
+                             + ` <a target="_blank" href="//${page}">${page}</a>`
                              + ` <small>(<a href=\"/page#${page}">i</a>)</small>`;
                 if (alt != null || title != null || filename != null) {
                     li.innerHTML += " ("

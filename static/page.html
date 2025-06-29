@@ -13,7 +13,7 @@
 
         async function init() {
             let page = window.location.hash.substring(1);
-            document.getElementById("title").innerHTML = "Page: <a href=\"//" + page + "\">" + page + "</a>";
+            document.getElementById("title").innerHTML = `Page: <a href="//${page}">${page}</a>`;
             let res = await fetch("/api/page/" + encodeURIComponent(page));
             let resJson = JSON.parse(await res.text());
             let backlinks = document.getElementById("backlinks");
@@ -25,15 +25,15 @@
                 let title = backlink["title"];
                 let filename = backlink["filename"];
                 let li = document.createElement("li");
-                li.innerHTML = "<a href=\"/button#" + buttonHash + "\"><img src=\"/api/button/" + buttonHash + "/img\" alt=\"Button\" class=\"button\"></a>"
-                li.innerHTML += " <a taregt="_blank" href=\"//" + page + "\">" + page + "</a>";
-                li.innerHTML += " <small>(<a href=\"/page#" + page + "\">i</a>)</small>";
+                li.innerHTML = `<a href="/button#${buttonHash}"><img src="/api/button/${buttonHash}/img" alt="Button" class="button"></a>`
+                             + ` <a target="_blank" href="${page}">${page}</a>`
+                             + ` <small>(<a href=\"/page#${page}">i</a>)</small>`;
                 if (alt != null || title != null || filename != null) {
                     li.innerHTML += " ("
                         + [
-                            alt != null ? "alt: <span class='light-bg'>" + enc(alt) + "</span>" : null,
-                            title != null ? "title: <span class='light-bg'>" + enc(title) + "</span>" : null,
-                            filename != null ? "filename: <span class='light-bg'>" + enc(filename) + "</span>" : null
+                            alt != null ? `alt: <span class="light-bg">${enc(alt)}</span>` : null,
+                            title != null ? `title: <span class="light-bg">${enc(title)}</span>` : null,
+                            filename != null ? `filename: <span class="light-bg">${enc(filename)}</span>` : null
                         ].filter(x => x != null).join(", ")
                         + ")"
                 }
@@ -48,17 +48,17 @@
                 let title = button["title"];
                 let filename = button["filename"];
                 let li = document.createElement("li");
-                li.innerHTML = '<a href="/button#' + buttonHash + '"><img src="/api/button/' + buttonHash + '/img" alt="Button" class="button"></a>'
+                li.innerHTML = `<a href="/button#${buttonHash}"><img src="/api/button/${buttonHash}/img" alt="Button" class="button"></a>`
                 if (page !== null) {
-                    li.innerHTML += " <a href=\"//" + page + "\">" + page + "</a>";
-                    li.innerHTML += " <small>(<a href=\"/page#" + page + "\">i</a>)</small>";
+                    li.innerHTML += ` <a href="//${page}">${page}</a>`
+                                  + ` <small>(<a href="/page#${page}\">i</a>)</small>`;
                 }
                 if (alt != null || title != null || filename != null) {
                     li.innerHTML += " ("
                         + [
-                            alt != null ? "alt: <span class='light-bg'>" + enc(alt) + "</span>" : null,
-                            title != null ? "title: <span class='light-bg'>" + enc(title) + "</span>" : null,
-                            filename != null ? "filename: <span class='light-bg'>" + enc(filename) + "</span>" : null
+                            alt != null ? `alt: <span class="light-bg">${enc(alt)}</span>` : null,
+                            title != null ? `title: <span class="light-bg">${enc(title)}</span>` : null,
+                            filename != null ? `filename: <span class="light-bg">${enc(filename)}</span>` : null
                         ].filter(x => x != null).join(", ")
                         + ")"
                 }

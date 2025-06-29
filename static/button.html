@@ -37,19 +37,19 @@
                 let filename = page["filename"]
 
                 let li = document.createElement("li")
-                li.innerHTML = '<a target="_blank" href="//' + backlink + '">' + backlink + "</a>";
-                li.innerHTML += ' <small>(<a href="/page#' + backlink + '">i</a>)</small>'
+                li.innerHTML = `<a target="_blank" href="//${backlink}">${backlink}</a>`
+                             + ` <small>(<a href="/page#${backlink}">i</a>)</small>`
                 if (link != null) {
                     li.innerHTML += " -&gt; "
-                    li.innerHTML += '<a target="_blank" href="//' + link + '">' + link + "</a>";
-                    li.innerHTML += ' <small>(<a href="/page#' + link + '">i</a>)</small>';
+                                  + ` <a target="_blank" href="//${link}">${link}</a>`
+                                  + ` <small>(<a href="/page#${link}">i</a>)</small>`;
                 }
                 if (alt != null || title != null || filename != null) {
                     li.innerHTML += " ("
                         + [
-                            alt != null ? "alt: <span class='light-bg'>" + enc(alt) + "</span>" : null,
-                            title != null ? "title: <span class='light-bg'>" + enc(title) + "</span>" : null,
-                            filename != null ? "filename: <span class='light-bg'>" + enc(filename) + "</span>" : null
+                            alt != null ? `alt: <span class='light-bg'>${enc(alt)}</span>` : null,
+                            title != null ? `title: <span class='light-bg'>${enc(title)}</span>` : null,
+                            filename != null ? `filename: <span class='light-bg'>${enc(filename)}</span>` : null
                           ].filter(x => x != null).join(", ")
                         + ")"
                 }

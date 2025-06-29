@@ -93,15 +93,34 @@ async fn search_route() -> (HeaderMap, String) {
 
 async fn button_img_route(Path(hash): Path<String>) -> (StatusCode, HeaderMap, Vec<u8>) {
     let button = BUTTONS.get().unwrap().get(&hash);
+    let mut is_found = false;
     let button = match button {
-        Some(button) => button.clone(),
-        None => return (StatusCode::NOT_FOUND, HeaderMap::new(), vec![]),
+        Some(button) => {
+            is_found = true;
+        	button.clone()
+        },
+        None => {
+        	if let Some(button) = BUTTONS.get().unwrap().get("404") {
+        		button.clone()
+        	} else {
+		        (String::new(), vec![])
+        	}
+        },
     };
 
     let mut hm = HeaderMap::new();
-    hm.insert(
-        "content-type",
-        format!("image/{}", button.0).parse().unwrap(),
-    );
-    (StatusCode::OK, hm, button.1.clone())
+    if &button.0 != "" {
+	    hm.insert(
+	        "content-type",
+	        format!("image/{}", button.0).parse().unwrap(),
+	    );
+    };
+
+    let status = if is_found {
+    	StatusCode::OK
+    } else {
+    	StatusCode::NOT_FOUND
+    };
+    
+    (status, hm, button.1.clone())
 }

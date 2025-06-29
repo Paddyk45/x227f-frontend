@@ -26,7 +26,7 @@
                 let filename = backlink["filename"];
                 let li = document.createElement("li");
                 li.innerHTML = "<a href=\"/button#" + buttonHash + "\"><img src=\"/api/button/" + buttonHash + "/img\" alt=\"Button\" class=\"button\"></a>"
-                li.innerHTML += " <a href=\"//" + page + "\">" + page + "</a>";
+                li.innerHTML += " <a taregt="_blank" href=\"//" + page + "\">" + page + "</a>";
                 li.innerHTML += " <small>(<a href=\"/page#" + page + "\">i</a>)</small>";
                 if (alt != null || title != null || filename != null) {
                     li.innerHTML += " ("
@@ -71,6 +71,8 @@
     </script>
 </head>
 <body>
+<small><a href="/">home</a></small>
+<br>
 <h2 id="title"></h2>
 <h3>Linked from:</h3>
 <ul id="backlinks"></ul>

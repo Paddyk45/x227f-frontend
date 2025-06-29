@@ -29,17 +29,18 @@ pub struct PageInfo {
 
 pub async fn button_api_route(Path(hash): Path<String>) -> (StatusCode, Json<ButtonApiResponse>) {
     // make sure that the hash is a valid hash
-    if hash.len() != 32 || hash.chars().any(|c| !c.is_ascii_hexdigit()) {
+    if hash.len() > 32 || hash.chars().any(|c| !c.is_ascii_hexdigit()) {
         return (
             StatusCode::BAD_REQUEST,
             Json(ButtonApiResponse::Error("Invalid hash".to_string())),
         );
     }
-
+	
     let db = {
         let db = DATABASE.lock().await;
         db.try_clone().unwrap()
     };
+    
     let mut stmt = db
         .prepare("SELECT page,link,alt,title,filename FROM pages WHERE sha256 = ?")
         .unwrap();

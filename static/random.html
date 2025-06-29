@@ -5,30 +5,36 @@
     <title>Random Buttons</title>
     <link rel="stylesheet" href="style.css">
     <script>
-        async function update() {
-            let buttons = document.getElementById("buttons")
-            buttons.innerHTML = "";
-            let amount = document.getElementById("per-page").value;
-            let res = await fetch("/api/random?amount=" + amount);
-            if (res.status !== 200) {
-                document.getElementById("reroll").innerText = "Failed to reroll";
-                return;
-            }
-            let hashes = JSON.parse(await res.text())["hashes"];
-            for (let hash of hashes) {
-                let a = document.createElement("a");
-                a.href = "/button#" + hash;
-                let img = document.createElement("img");
-                img.src = "/api/button/" + hash + "/img";
-                img.alt = "Button with hash " + hash;
-                img.className = "button";
-                a.innerHTML = img.outerHTML;
-                buttons.appendChild(a);
-            }
-        }
+		async function update() {
+			let buttons = document.getElementById("buttons")
+			buttons.innerHTML = "";
+			let amount = document.getElementById("per-page").value;
+			let res = await fetch("/api/random?amount=" + amount);
+			
+			if (res.status !== 200) {
+				document.getElementById("reroll").innerText = "Failed to reroll";
+				return;
+			}
+			
+			let hashes = JSON.parse(await res.text())["hashes"];
+			for (let hash of hashes) {
+				let a = document.createElement("a");
+				a.href = "/button#" + hash;
+				let img = document.createElement("img");
+				img.src = "/api/button/" + hash + "/img";
+				img.alt = "Button with hash " + hash;
+				img.className = "button";
+				a.innerHTML = img.outerHTML;
+				buttons.appendChild(a);
+			}
+		}
+
+        window.onload = update;
     </script>
 </head>
 <body>
+<small><a href="/">home</a></small>
+<br>
 <div>
     <label>
     <select id="per-page">
@@ -38,7 +44,7 @@
         <option value="100">100</option>
         <option value="150">150</option>
         <option value="200">200</option>
-        <option value="250">250</option>
+        <option value="250" selected>250</option>
         <option value="500">500</option>
         <option value="750">750</option>
         <option value="1000">1000</option>

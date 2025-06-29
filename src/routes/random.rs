@@ -14,7 +14,7 @@ pub struct Hashes {
     hashes: Vec<String>,
 }
 
-pub async fn random_api_route(_: LimitPerSecond<2, http::Uri>, q: Query<QueryParams>) -> Json<Hashes> {
+pub async fn random_api_route(q: Query<QueryParams>) -> Json<Hashes> {
     let amount = q.amount.clamp(1, 1000);
 
     let db = {

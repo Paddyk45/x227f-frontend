@@ -8,12 +8,9 @@ use axum::http::{HeaderMap, StatusCode};
 use axum::{routing::get, Router};
 use duckdb::Connection;
 use once_cell::sync::Lazy;
-use axum_limit::{Limit, LimitState};
 
-use std::cell::OnceCell;
 use std::collections::HashMap;
-use std::fmt::format;
-use std::sync::{Arc, OnceLock};
+use std::sync::OnceLock;
 
 use tokio::fs::read;
 use tokio::sync::Mutex;

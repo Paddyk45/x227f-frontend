@@ -1,8 +1,6 @@
 use crate::DATABASE;
 use axum::extract::Path;
-use axum::http::StatusCode;
 use axum::Json;
-use duckdb::types::Value;
 use serde::Serialize;
 
 #[derive(Serialize)]

@@ -2,7 +2,6 @@ use crate::DATABASE;
 use axum::extract::Query;
 use axum::Json;
 use serde::{Deserialize, Serialize};
-use axum_limit::LimitPerSecond;
 
 #[derive(Deserialize)]
 pub struct QueryParams {

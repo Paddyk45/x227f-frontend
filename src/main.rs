@@ -44,7 +44,6 @@ async fn main() {
         .route("/api/search", get(search_api_route))
         .route("/api/random", get(random_api_route))
         .route("/api/stats", get(stats_api_route))
-        .with_state(LimitState::<http::Uri>::default())
         ;
     // run it
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8831").await.unwrap();
